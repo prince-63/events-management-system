@@ -11,6 +11,8 @@ public enum ErrorMessageConstants {
     ORGANIZER_PASSWORD_MISMATCH("Please enter the same password that you used for organizer account."),
     ADMIN_ROLE_CONFLICT("User is already registered as ADMIN and cannot register as ATTENDEE or ORGANIZER."),
     ADMIN_ALREADY_EXISTS("A admin with this email is already registered."),
+    PASSWORD_MISMATCH("Passwords don't match."),
+    EMAIL_NOT_EXISTS("A user with this %s email is not found."),
 
     INVALID_CREDENTIALS("Invalid email or password."),
     UNAUTHORIZED_ACCESS("You are not authorized to access this resource."),

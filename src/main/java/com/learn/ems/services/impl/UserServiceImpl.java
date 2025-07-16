@@ -7,6 +7,7 @@ import com.learn.ems.entity.User;
 import com.learn.ems.exceptions.InvalidPasswordException;
 import com.learn.ems.exceptions.UnauthorizedRoleChangeException;
 import com.learn.ems.exceptions.UserAlreadyExistsException;
+import com.learn.ems.exceptions.UserNotFoundException;
 import com.learn.ems.mapper.UserMapper;
 import com.learn.ems.repositories.UserRepository;
 import com.learn.ems.services.UserService;
@@ -156,7 +157,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public User findByEmail(String email) {
-        return null;
+        return userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException(String.format(EMAIL_NOT_EXISTS.getMessage(), email)));
     }
 
     /**

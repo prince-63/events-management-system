@@ -58,7 +58,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             UserAlreadyExistsException.class,
             InvalidPasswordException.class,
             UnauthorizedRoleChangeException.class,
-            ResourceNotFoundException.class
+            ResourceNotFoundException.class,
+            UserNotFoundException.class
     })
     public ResponseEntity<ErrorResponseDTO> handleResourceNotFoundException(
             RuntimeException exception, WebRequest webRequest
@@ -77,6 +78,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         if (ex instanceof InvalidPasswordException) return HttpStatus.UNAUTHORIZED;
         if (ex instanceof UnauthorizedRoleChangeException) return HttpStatus.FORBIDDEN;
         if (ex instanceof ResourceNotFoundException) return HttpStatus.NOT_FOUND;
+        if (ex instanceof UserNotFoundException) return HttpStatus.NOT_FOUND;
         return HttpStatus.BAD_REQUEST;
     }
 

@@ -6,5 +6,5 @@ import lombok.Builder;
 import java.util.Set;
 
 @Builder
-public record UserResponseDTO(Long id, String name, String email, String password, Boolean enabled, Set<Role> role) {
+public record UserResponseDTO(Long id, String name, String email, Boolean enabled, Set<Role> role) {
 }
