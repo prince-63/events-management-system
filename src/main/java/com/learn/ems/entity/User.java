@@ -41,11 +41,12 @@ public class User extends BaseEntity {
     private String password;
 
     @Schema(description = "Indicates if the user is enabled", example = "true")
-    private boolean enabled = true;
+    private Boolean enabled = true;
 
     @Schema(description = "Role assigned to the user", example = "ORGANIZER")
+    @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private Set<Role> role;
 
     @JsonManagedReference
     @OneToMany(mappedBy = "organizer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

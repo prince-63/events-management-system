@@ -1,0 +1,27 @@
+package com.learn.ems.constants;
+
+import lombok.Getter;
+
+@Getter
+public enum ErrorMessageConstants {
+    EMAIL_ALREADY_EXISTS("A user with this email is already registered."),
+    ATTENDEE_ALREADY_EXISTS("User is already registered as ATTENDEE."),
+    ORGANIZER_ALREADY_EXISTS("User is already registered as ORGANIZER."),
+    ATTENDEE_PASSWORD_MISMATCH("Please enter the same password that you used for attending account."),
+    ORGANIZER_PASSWORD_MISMATCH("Please enter the same password that you used for organizer account."),
+    ADMIN_ROLE_CONFLICT("User is already registered as ADMIN and cannot register as ATTENDEE or ORGANIZER."),
+    ADMIN_ALREADY_EXISTS("A admin with this email is already registered."),
+
+    INVALID_CREDENTIALS("Invalid email or password."),
+    UNAUTHORIZED_ACCESS("You are not authorized to access this resource."),
+
+    ENTITY_NOT_FOUND("Requested resource not found."),
+    INTERNAL_SERVER_ERROR("An unexpected error occurred.");
+
+    private final String message;
+
+    ErrorMessageConstants(String message) {
+        this.message = message;
+    }
+}
+
