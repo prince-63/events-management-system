@@ -1,4 +1,4 @@
-package com.learn.events_management;
+package com.learn.ems;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
