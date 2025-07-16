@@ -16,7 +16,10 @@ public enum ErrorMessageConstants {
     UNAUTHORIZED_ACCESS("You are not authorized to access this resource."),
 
     ENTITY_NOT_FOUND("Requested resource not found."),
-    INTERNAL_SERVER_ERROR("An unexpected error occurred.");
+    INTERNAL_SERVER_ERROR("An unexpected error occurred."),
+
+    // ====== Constraint Validation Error Message ======
+    CONSTRAINT_VALIDATION("Constraint Validation failed");
 
     private final String message;
 

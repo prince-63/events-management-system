@@ -1,14 +1,19 @@
 package com.learn.ems.dto;
 
-import lombok.Builder;
-import org.springframework.http.HttpStatus;
+import jakarta.persistence.MappedSuperclass;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@MappedSuperclass
 public class ErrorResponseDTO {
     private String apiPath;
-    private HttpStatus errorCode;
+    private int errorCode;
     private String errorMessage;
     private LocalDateTime errorTime;
 }
