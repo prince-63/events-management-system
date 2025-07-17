@@ -59,7 +59,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             InvalidPasswordException.class,
             UnauthorizedRoleChangeException.class,
             ResourceNotFoundException.class,
-            UserNotFoundException.class
+            UserNotFoundException.class,
+            JwtTokenValidationException.class
     })
     public ResponseEntity<ErrorResponseDTO> handleResourceNotFoundException(
             RuntimeException exception, WebRequest webRequest

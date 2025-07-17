@@ -1,6 +1,7 @@
 package com.learn.ems.services;
 
 import com.learn.ems.dto.LoginRequestDTO;
+import com.learn.ems.dto.LoginResponseDTO;
 import com.learn.ems.dto.RegisterRequestDTO;
 import com.learn.ems.entity.User;
 
@@ -41,7 +42,7 @@ public interface UserService {
      * @param requestDTO login request DTO
      * @return authenticated User object
      */
-    User login(LoginRequestDTO requestDTO);
+    LoginResponseDTO login(LoginRequestDTO requestDTO);
 
     /**
      * Retrieves all users in the system.

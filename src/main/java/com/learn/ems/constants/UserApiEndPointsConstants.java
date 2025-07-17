@@ -7,6 +7,7 @@ public final class UserApiEndPointsConstants {
     private static final String BASE_URL = "/api/v1/users";
 
     // ==== Auth ====
+    public static final String FORM_LOGIN = BASE_URL + "/login/form";
     public static final String LOGIN = BASE_URL + "/login";
     public static final String LOGOUT = BASE_URL + "/logout";
 

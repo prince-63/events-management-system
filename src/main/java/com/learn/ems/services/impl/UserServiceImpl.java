@@ -1,6 +1,7 @@
 package com.learn.ems.services.impl;
 
 import com.learn.ems.dto.LoginRequestDTO;
+import com.learn.ems.dto.LoginResponseDTO;
 import com.learn.ems.dto.RegisterRequestDTO;
 import com.learn.ems.entity.Role;
 import com.learn.ems.entity.User;
@@ -11,14 +12,27 @@ import com.learn.ems.exceptions.UserNotFoundException;
 import com.learn.ems.mapper.UserMapper;
 import com.learn.ems.repositories.UserRepository;
 import com.learn.ems.services.UserService;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
 import lombok.AllArgsConstructor;
+import org.springframework.core.env.Environment;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
+import static com.learn.ems.constants.AuthenticationConstants.JWT_SECRET_DEFAULT_VALUE;
+import static com.learn.ems.constants.AuthenticationConstants.JWT_SECRET_KEY;
 import static com.learn.ems.constants.ErrorMessageConstants.*;
 
 @Service
@@ -27,6 +41,8 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticateManager;
+    private final Environment environment;
 
     /**
      * Registers a new user with role ATTENDEE.
@@ -135,8 +151,25 @@ public class UserServiceImpl implements UserService {
      * @return authenticated User object
      */
     @Override
-    public User login(LoginRequestDTO requestDTO) {
-        return null;
+    public LoginResponseDTO login(LoginRequestDTO requestDTO) {
+        String jwt;
+        Authentication authentication = UsernamePasswordAuthenticationToken.unauthenticated(requestDTO.email(), requestDTO.password());
+        Authentication authenticationResponse =  authenticateManager.authenticate(authentication);
+        if (authenticationResponse != null) {
+            String secret = environment.getProperty(JWT_SECRET_KEY, JWT_SECRET_DEFAULT_VALUE);
+            SecretKey secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+            jwt = Jwts.builder()
+                    .issuer("bookstore").subject("JWT Token")
+                    .claim("username", authenticationResponse.getPrincipal())
+                    .claim("authorities", authenticationResponse.getAuthorities().stream()
+                            .map(GrantedAuthority::getAuthority).collect(Collectors.joining(",")))
+                    .issuedAt(new Date())
+                    .expiration(new Date((new Date()).getTime() + 30000000))
+                    .signWith(secretKey).compact();
+            return new LoginResponseDTO(jwt);
+        }
+
+        return new LoginResponseDTO("");
     }
 
     /**
