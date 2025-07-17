@@ -12,16 +12,14 @@ public enum ErrorMessageConstants {
     ADMIN_ROLE_CONFLICT("User is already registered as ADMIN and cannot register as ATTENDEE or ORGANIZER."),
     ADMIN_ALREADY_EXISTS("A admin with this email is already registered."),
     PASSWORD_MISMATCH("Passwords don't match."),
+    CHANGE_PASSWORD_MISMATCH("Your previous passwords don't match."),
     JWT_TOKEN_NOT_VALID("The JWT token is not valid."),
     EMAIL_NOT_EXISTS("A user with this %s email is not found."),
-
+    USER_WITH_ID_NOT_EXISTS("A user with this %s id is not found."),
     INVALID_CREDENTIALS("Invalid email or password."),
     UNAUTHORIZED_ACCESS("You are not authorized to access this resource."),
-
     ENTITY_NOT_FOUND("Requested resource not found."),
     INTERNAL_SERVER_ERROR("An unexpected error occurred."),
-
-    // ====== Constraint Validation Error Message ======
     CONSTRAINT_VALIDATION("Constraint Validation failed");
 
     private final String message;

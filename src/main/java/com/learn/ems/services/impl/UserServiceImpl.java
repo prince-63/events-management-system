@@ -1,8 +1,6 @@
 package com.learn.ems.services.impl;
 
-import com.learn.ems.dto.LoginRequestDTO;
-import com.learn.ems.dto.LoginResponseDTO;
-import com.learn.ems.dto.RegisterRequestDTO;
+import com.learn.ems.dto.*;
 import com.learn.ems.entity.Role;
 import com.learn.ems.entity.User;
 import com.learn.ems.exceptions.InvalidPasswordException;
@@ -11,6 +9,7 @@ import com.learn.ems.exceptions.UserAlreadyExistsException;
 import com.learn.ems.exceptions.UserNotFoundException;
 import com.learn.ems.mapper.UserMapper;
 import com.learn.ems.repositories.UserRepository;
+import com.learn.ems.services.EmailService;
 import com.learn.ems.services.UserService;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -25,10 +24,8 @@ import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.time.LocalDateTime;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.learn.ems.constants.AuthenticationConstants.JWT_SECRET_DEFAULT_VALUE;
@@ -43,13 +40,8 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticateManager;
     private final Environment environment;
+    private final EmailService emailService;
 
-    /**
-     * Registers a new user with role ATTENDEE.
-     *
-     * @param requestDTO registration details
-     * @return registered User object
-     */
     @Override
     public User registerAsAttendee(RegisterRequestDTO requestDTO) {
         Optional<User> existingUserOpt = userRepository.findByEmail(requestDTO.email());
@@ -75,7 +67,6 @@ public class UserServiceImpl implements UserService {
             }
         }
 
-        // Create new user
         User newAttendee = UserMapper.toModel(requestDTO);
         newAttendee.setPassword(passwordEncoder.encode(requestDTO.password()));
         newAttendee.setRole(Set.of(Role.ATTENDEE));
@@ -83,13 +74,6 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(newAttendee);
     }
 
-
-    /**
-     * Registers a new user with role ADMIN.
-     *
-     * @param requestDTO registration details
-     * @return registered User object
-     */
     @Override
     public User registerAsAdmin(RegisterRequestDTO requestDTO) {
         Optional<User> existingUserOpt = userRepository.findByEmail(requestDTO.email());
@@ -105,12 +89,6 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(newAdmin);
     }
 
-    /**
-     * Registers a new user with role ORGANIZER.
-     *
-     * @param requestDTO registration details
-     * @return registered User object
-     */
     @Override
     public User registerAsOrganizer(RegisterRequestDTO requestDTO) {
         Optional<User> existingUserOpt = userRepository.findByEmail(requestDTO.email());
@@ -136,7 +114,6 @@ public class UserServiceImpl implements UserService {
             }
         }
 
-        // Create new organizer
         User newOrganizer = UserMapper.toModel(requestDTO);
         newOrganizer.setPassword(passwordEncoder.encode(requestDTO.password()));
         newOrganizer.setRole(Set.of(Role.ORGANIZER));
@@ -144,17 +121,11 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(newOrganizer);
     }
 
-    /**
-     * Authenticates a user using email and password.
-     *
-     * @param requestDTO login request DTO
-     * @return authenticated User object
-     */
     @Override
     public LoginResponseDTO login(LoginRequestDTO requestDTO) {
         String jwt;
         Authentication authentication = UsernamePasswordAuthenticationToken.unauthenticated(requestDTO.email(), requestDTO.password());
-        Authentication authenticationResponse =  authenticateManager.authenticate(authentication);
+        Authentication authenticationResponse = authenticateManager.authenticate(authentication);
         if (authenticationResponse != null) {
             String secret = environment.getProperty(JWT_SECRET_KEY, JWT_SECRET_DEFAULT_VALUE);
             SecretKey secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
@@ -168,118 +139,102 @@ public class UserServiceImpl implements UserService {
                     .signWith(secretKey).compact();
             return new LoginResponseDTO(jwt);
         }
-
         return new LoginResponseDTO("");
     }
 
-    /**
-     * Retrieves all users in the system.
-     *
-     * @return list of users
-     */
     @Override
     public List<User> getAllUsers() {
-        return List.of();
+        return userRepository.findAll();
     }
 
-    /**
-     * Finds a user by their email address.
-     *
-     * @param email unique email
-     * @return matching User object
-     */
     @Override
     public User findByEmail(String email) {
         return userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException(String.format(EMAIL_NOT_EXISTS.getMessage(), email)));
     }
 
-    /**
-     * Checks if a user exists with the given email.
-     *
-     * @param email unique email
-     * @return true if user exists, false otherwise
-     */
     @Override
     public boolean existsByEmail(String email) {
-        return false;
+        return userRepository.existsByEmail(email);
     }
 
-    /**
-     * Retrieves a user by their ID.
-     *
-     * @param id unique user ID
-     * @return User object
-     */
     @Override
-    public User getById(Long id) {
-        return null;
+    public User getById(Long id) throws UserNotFoundException {
+        return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(String.format(USER_WITH_ID_NOT_EXISTS.getMessage(), id)));
     }
 
-    /**
-     * Updates the user's name.
-     *
-     * @param id   user ID
-     * @param name new name to update
-     * @return updated User object
-     */
     @Override
-    public User updateName(Long id, String name) {
-        return null;
+    public User updateName(Long id, String name) throws UserNotFoundException {
+        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(String.format(USER_WITH_ID_NOT_EXISTS.getMessage(), id)));
+        user.setName(name);
+        return userRepository.save(user);
     }
 
-    /**
-     * Changes the password after validating the previous password.
-     *
-     * @param id               user ID
-     * @param previousPassword current password
-     * @param newPassword      new password to set
-     * @return updated User object
-     */
     @Override
-    public User updatePassword(Long id, String previousPassword, String newPassword) {
-        return null;
+    public User updatePassword(Long id, ChangePasswordRequestDTO requestDTO) {
+        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(String.format(USER_WITH_ID_NOT_EXISTS.getMessage(), id)));
+        if (passwordEncoder.matches(requestDTO.currentPassword(), user.getPassword())) {
+            user.setPassword(passwordEncoder.encode(requestDTO.newPassword()));
+            return userRepository.save(user);
+        } else {
+            throw new InvalidPasswordException(CHANGE_PASSWORD_MISMATCH.getMessage());
+        }
     }
 
-    /**
-     * Initiates the forgot password process (sends verification link or code).
-     *
-     * @param email email address of user
-     * @return User object (or throw exception if not found)
-     */
     @Override
-    public User forgotPassword(String email) {
-        return null;
+    public void forgotPassword(String email) {
+        User dbUser = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException(String.format(EMAIL_NOT_EXISTS.getMessage(), email)));
+        dbUser.setPwdVerfCode(generateVerificationCode());
+        dbUser.setPwdVerfDur(LocalDateTime.now().plusMinutes(5));
+
+        emailService.sendEmail(
+                email,
+                "Password Reset Code – EMS 🔐",
+                "<h1>Hello " + dbUser.getName() + "!</h1>" +
+                        "<p>Your password reset code is <b>" + dbUser.getPwdVerfCode() + "</b>. It will expire in 5 minutes.</p>"
+        );
+        userRepository.save(dbUser);
     }
 
-    /**
-     * Verifies a one-time code and updates the password.
-     *
-     * @param verificationCode code sent to email
-     * @param newPassword      new password to set
-     * @return updated User object
-     */
+    private String generateVerificationCode() {
+        Random random = new Random();
+        int code = 100000 + random.nextInt(900000);
+        return String.valueOf(code);
+    }
+
     @Override
-    public User verifyEmailAndChangePassword(String verificationCode, String newPassword) {
-        return null;
+    public User verifyEmailAndChangePassword(VerificationEmailAndPasswordChangeRequestDTO requestDTO) {
+        String email = requestDTO.email();
+        String newPassword = requestDTO.newPassword();
+        String verificationCode = requestDTO.verificationCode();
+
+        User dbUser = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException(String.format(EMAIL_NOT_EXISTS.getMessage(), email)));
+
+        if (!verificationCode.equals(dbUser.getPwdVerfCode())) {
+            throw new RuntimeException("Invalid verification code.");
+        }
+
+        if (dbUser.getPwdVerfDur() == null || dbUser.getPwdVerfDur().isBefore(LocalDateTime.now())) {
+            throw new RuntimeException("Verification code has expired.");
+        }
+
+        dbUser.setPassword(passwordEncoder.encode(newPassword));
+        dbUser.setPwdVerfCode(null);
+        dbUser.setPwdVerfDur(null);
+
+        return userRepository.save(dbUser);
     }
 
-    /**
-     * Deletes a user by their ID.
-     *
-     * @param id user ID
-     */
     @Override
     public void deleteById(Long id) {
-
+        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(String.format(USER_WITH_ID_NOT_EXISTS.getMessage(), id)));
+        userRepository.delete(user);
     }
 
-    /**
-     * Deletes a user by their email.
-     *
-     * @param email user's email address
-     */
     @Override
     public void deleteByEmail(String email) {
-
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException(String.format(EMAIL_NOT_EXISTS.getMessage(), email)));
+        userRepository.delete(user);
     }
 }

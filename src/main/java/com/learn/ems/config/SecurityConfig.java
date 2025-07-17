@@ -17,6 +17,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.password.HaveIBeenPwnedRestApiPasswordChecker;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
+import static com.learn.ems.constants.SwaggerEndPointsConstants.SWAGGER_WHITELIST;
 import static com.learn.ems.constants.UserApiEndPointsConstants.*;
 
 @Configuration
@@ -31,10 +32,15 @@ public class SecurityConfig {
                         (req) -> req
                                 .requestMatchers(
                                         REGISTER_ATTENDEE,
-                                        REGISTER_ATTENDEE,
+                                        REGISTER_ADMIN,
                                         REGISTER_ORGANIZER,
                                         LOGIN
                                 ).permitAll()
+                                .requestMatchers(
+                                        GET_ALL_USERS,
+                                        CHECK_USER_EXISTS_BY_EMAIL
+                                ).hasRole("ADMIN")
+                                .requestMatchers(SWAGGER_WHITELIST).permitAll()
                                 .anyRequest().authenticated());
         http.formLogin(Customizer.withDefaults());
         http.httpBasic(Customizer.withDefaults());

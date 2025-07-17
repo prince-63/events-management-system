@@ -1,4 +1,16 @@
 package com.learn.ems.dto;
 
-public record ResponseDTO<T>(String message, Boolean success, T data) {}
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Builder
+@Data
+@AllArgsConstructor @NoArgsConstructor
+public class ResponseDTO <T> {
+    public String message;
+    public Boolean success;
+    public T data;
+}
 

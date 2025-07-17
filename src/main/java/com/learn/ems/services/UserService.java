@@ -1,8 +1,6 @@
 package com.learn.ems.services;
 
-import com.learn.ems.dto.LoginRequestDTO;
-import com.learn.ems.dto.LoginResponseDTO;
-import com.learn.ems.dto.RegisterRequestDTO;
+import com.learn.ems.dto.*;
 import com.learn.ems.entity.User;
 
 import java.util.List;
@@ -88,11 +86,10 @@ public interface UserService {
      * Changes the password after validating the previous password.
      *
      * @param id user ID
-     * @param previousPassword current password
-     * @param newPassword new password to set
+     * @param requestDTO - containing new password, and curr password
      * @return updated User object
      */
-    User updatePassword(Long id, String previousPassword, String newPassword);
+    User updatePassword(Long id, ChangePasswordRequestDTO requestDTO);
 
     /**
      * Initiates the forgot password process (sends verification link or code).
@@ -100,16 +97,15 @@ public interface UserService {
      * @param email email address of user
      * @return User object (or throw exception if not found)
      */
-    User forgotPassword(String email);
+    void forgotPassword(String email);
 
     /**
      * Verifies a one-time code and updates the password.
      *
-     * @param verificationCode code sent to email
-     * @param newPassword new password to set
+     * @param requestDTO containing all the request data from the user like there email, new password, verification code.
      * @return updated User object
      */
-    User verifyEmailAndChangePassword(String verificationCode, String newPassword);
+    User verifyEmailAndChangePassword(VerificationEmailAndPasswordChangeRequestDTO requestDTO);
 
     /**
      * Deletes a user by their ID.
