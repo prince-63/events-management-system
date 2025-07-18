@@ -51,6 +51,9 @@ public class Event extends BaseEntity {
     @Min(value = 1, message = "Capacity must be at least 1")
     private Integer capacity;
 
+    @Schema(description = "Public id of the image url", example = "banner-image0-028932")
+    private String urlId;
+
     @Schema(description = "URL of the event banner image", example = "https://cdn.example.com/images/banner.jpg")
     private String bannerUrl;
 

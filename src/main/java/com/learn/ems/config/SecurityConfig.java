@@ -17,6 +17,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.password.HaveIBeenPwnedRestApiPasswordChecker;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
+import static com.learn.ems.constants.EventApiEndPointConstants.*;
 import static com.learn.ems.constants.SwaggerEndPointsConstants.SWAGGER_WHITELIST;
 import static com.learn.ems.constants.UserApiEndPointsConstants.*;
 
@@ -34,14 +35,30 @@ public class SecurityConfig {
                                         REGISTER_ATTENDEE,
                                         REGISTER_ADMIN,
                                         REGISTER_ORGANIZER,
-                                        LOGIN
+                                        LOGIN,
+                                        LOGOUT
                                 ).permitAll()
                                 .requestMatchers(
                                         GET_ALL_USERS,
-                                        CHECK_USER_EXISTS_BY_EMAIL
+                                        CHECK_USER_EXISTS_BY_EMAIL,
+                                        DELETE_USER_BY_EMAIL
                                 ).hasRole("ADMIN")
+                                .requestMatchers(
+                                        CREATE_EVENT, UPDATE_EVENT,
+                                        UPLOAD_BANNER, DELETE_EVENT
+                                ).hasRole("ORGANIZER")
+                                .requestMatchers(
+                                        GET_CURRENT_USER,
+                                        UPDATE_NAME,
+                                        UPDATE_PASSWORD,
+                                        FORGOT_PASSWORD,
+                                        VERIFY_EMAIL_AND_CHANGE_PASSWORD,
+                                        GET_ALL_EVENTS,
+                                        GET_EVENT_BY_ID,
+                                        GET_EVENTS_BY_ORGANIZER
+                                ).authenticated()
                                 .requestMatchers(SWAGGER_WHITELIST).permitAll()
-                                .anyRequest().authenticated());
+                                .anyRequest().denyAll());
         http.formLogin(Customizer.withDefaults());
         http.httpBasic(Customizer.withDefaults());
         return http.build();
