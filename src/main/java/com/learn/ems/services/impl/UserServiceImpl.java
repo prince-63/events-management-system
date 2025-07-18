@@ -28,8 +28,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.learn.ems.constants.AuthenticationConstants.JWT_SECRET_DEFAULT_VALUE;
-import static com.learn.ems.constants.AuthenticationConstants.JWT_SECRET_KEY;
+import static com.learn.ems.constants.AuthenticationConstants.*;
 import static com.learn.ems.constants.ErrorMessageConstants.*;
 
 @Service
@@ -50,16 +49,16 @@ public class UserServiceImpl implements UserService {
             User existingUser = existingUserOpt.get();
 
             if (existingUser.getRole().contains(Role.ADMIN)) {
-                throw new UnauthorizedRoleChangeException(ADMIN_ROLE_CONFLICT.getMessage());
+                throw new UnauthorizedRoleChangeException(ADMIN_ROLE_CONFLICT);
             }
 
             if (existingUser.getRole().contains(Role.ATTENDEE)) {
-                throw new UserAlreadyExistsException(ATTENDEE_ALREADY_EXISTS.getMessage());
+                throw new UserAlreadyExistsException(ATTENDEE_ALREADY_EXISTS);
             }
 
             if (existingUser.getRole().contains(Role.ORGANIZER)) {
                 if (!passwordEncoder.matches(requestDTO.password(), existingUser.getPassword())) {
-                    throw new InvalidPasswordException(ORGANIZER_PASSWORD_MISMATCH.getMessage());
+                    throw new InvalidPasswordException(ORGANIZER_PASSWORD_MISMATCH);
                 }
 
                 existingUser.getRole().add(Role.ATTENDEE);
@@ -79,7 +78,7 @@ public class UserServiceImpl implements UserService {
         Optional<User> existingUserOpt = userRepository.findByEmail(requestDTO.email());
 
         if (existingUserOpt.isPresent()) {
-            throw new UserAlreadyExistsException(ADMIN_ALREADY_EXISTS.getMessage());
+            throw new UserAlreadyExistsException(ADMIN_ALREADY_EXISTS);
         }
 
         User newAdmin = UserMapper.toModel(requestDTO);
@@ -97,16 +96,16 @@ public class UserServiceImpl implements UserService {
             User existingUser = existingUserOpt.get();
 
             if (existingUser.getRole().contains(Role.ADMIN)) {
-                throw new UnauthorizedRoleChangeException(ADMIN_ROLE_CONFLICT.getMessage());
+                throw new UnauthorizedRoleChangeException(ADMIN_ROLE_CONFLICT);
             }
 
             if (existingUser.getRole().contains(Role.ORGANIZER)) {
-                throw new UserAlreadyExistsException(ORGANIZER_ALREADY_EXISTS.getMessage());
+                throw new UserAlreadyExistsException(ORGANIZER_ALREADY_EXISTS);
             }
 
             if (existingUser.getRole().contains(Role.ATTENDEE)) {
                 if (!passwordEncoder.matches(requestDTO.password(), existingUser.getPassword())) {
-                    throw new InvalidPasswordException(ATTENDEE_PASSWORD_MISMATCH.getMessage());
+                    throw new InvalidPasswordException(ATTENDEE_PASSWORD_MISMATCH);
                 }
 
                 existingUser.getRole().add(Role.ORGANIZER);
@@ -149,7 +148,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findByEmail(String email) {
-        return userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException(String.format(EMAIL_NOT_EXISTS.getMessage(), email)));
+        return getUser(email);
+    }
+
+    @Override
+    public User getById(Long id) throws UserNotFoundException {
+        return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(String.format(USER_WITH_ID_NOT_EXISTS, id)));
     }
 
     @Override
@@ -158,32 +162,26 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getById(Long id) throws UserNotFoundException {
-        return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(String.format(USER_WITH_ID_NOT_EXISTS.getMessage(), id)));
-    }
-
-    @Override
-    public User updateName(Long id, String name) throws UserNotFoundException {
-        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(String.format(USER_WITH_ID_NOT_EXISTS.getMessage(), id)));
+    public User updateName(String email, String name) throws UserNotFoundException {
+        User user = getUser(email);
         user.setName(name);
         return userRepository.save(user);
     }
 
     @Override
-    public User updatePassword(Long id, ChangePasswordRequestDTO requestDTO) {
-        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(String.format(USER_WITH_ID_NOT_EXISTS.getMessage(), id)));
+    public User updatePassword(String email, ChangePasswordRequestDTO requestDTO) {
+        User user = getUser(email);
         if (passwordEncoder.matches(requestDTO.currentPassword(), user.getPassword())) {
             user.setPassword(passwordEncoder.encode(requestDTO.newPassword()));
             return userRepository.save(user);
         } else {
-            throw new InvalidPasswordException(CHANGE_PASSWORD_MISMATCH.getMessage());
+            throw new InvalidPasswordException(CHANGE_PASSWORD_MISMATCH);
         }
     }
 
     @Override
     public void forgotPassword(String email) {
-        User dbUser = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserNotFoundException(String.format(EMAIL_NOT_EXISTS.getMessage(), email)));
+        User dbUser = getUser(email);
         dbUser.setPwdVerfCode(generateVerificationCode());
         dbUser.setPwdVerfDur(LocalDateTime.now().plusMinutes(5));
 
@@ -208,8 +206,7 @@ public class UserServiceImpl implements UserService {
         String newPassword = requestDTO.newPassword();
         String verificationCode = requestDTO.verificationCode();
 
-        User dbUser = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserNotFoundException(String.format(EMAIL_NOT_EXISTS.getMessage(), email)));
+        User dbUser = getUser(email);
 
         if (!verificationCode.equals(dbUser.getPwdVerfCode())) {
             throw new RuntimeException("Invalid verification code.");
@@ -227,14 +224,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteById(Long id) {
-        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(String.format(USER_WITH_ID_NOT_EXISTS.getMessage(), id)));
+    public void deleteByEmail(String email) {
+        User user = getUser(email);
         userRepository.delete(user);
     }
 
     @Override
-    public void deleteByEmail(String email) {
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException(String.format(EMAIL_NOT_EXISTS.getMessage(), email)));
+    public void deleteById(Long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(String.format(USER_WITH_ID_NOT_EXISTS, id)));
         userRepository.delete(user);
+    }
+
+    private User getUser(String email) throws UserNotFoundException {
+        return userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException(String.format(EMAIL_NOT_EXISTS, email)));
     }
 }

@@ -58,6 +58,14 @@ public interface UserService {
     User findByEmail(String email);
 
     /**
+     * Finds a user by their id
+     *
+     * @param id - unique user id
+     * @return matching user object
+     */
+    User getById(Long id);
+
+    /**
      * Checks if a user exists with the given email.
      *
      * @param email unique email
@@ -66,30 +74,22 @@ public interface UserService {
     boolean existsByEmail(String email);
 
     /**
-     * Retrieves a user by their ID.
-     *
-     * @param id unique user ID
-     * @return User object
-     */
-    User getById(Long id);
-
-    /**
      * Updates the user's name.
      *
-     * @param id user ID
+     * @param email user email
      * @param name new name to update
      * @return updated User object
      */
-    User updateName(Long id, String name);
+    User updateName(String email, String name);
 
     /**
      * Changes the password after validating the previous password.
      *
-     * @param id user ID
+     * @param email email of an user
      * @param requestDTO - containing new password, and curr password
      * @return updated User object
      */
-    User updatePassword(Long id, ChangePasswordRequestDTO requestDTO);
+    User updatePassword(String email, ChangePasswordRequestDTO requestDTO);
 
     /**
      * Initiates the forgot password process (sends verification link or code).
@@ -108,17 +108,16 @@ public interface UserService {
     User verifyEmailAndChangePassword(VerificationEmailAndPasswordChangeRequestDTO requestDTO);
 
     /**
-     * Deletes a user by their ID.
-     *
-     * @param id user ID
-     */
-    void deleteById(Long id);
-
-    /**
      * Deletes a user by their email.
      *
      * @param email user's email address
      */
     void deleteByEmail(String email);
+
+    /**
+     * Deletes a user by their id
+     * @param id user's id
+     */
+    void deleteById(Long id);
 }
 

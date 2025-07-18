@@ -15,15 +15,15 @@ public final class UserApiEndPointsConstants {
     public static final String REGISTER_ORGANIZER = BASE_URL + "/organizer/register";
 
     public static final String GET_USER_BY_ID = BASE_URL + "/{id}";
-    public static final String GET_USER_BY_EMAIL = BASE_URL + "/email/{email}";
+    public static final String GET_CURRENT_USER = BASE_URL + "/current-user";
     public static final String GET_ALL_USERS = BASE_URL + "/all";
     public static final String CHECK_USER_EXISTS_BY_EMAIL = BASE_URL + "/exists-by-email/{email}";
-    public static final String UPDATE_NAME = BASE_URL + "/{id}/update-name";
+    public static final String UPDATE_NAME = BASE_URL + "/update-name";
     public static final String DELETE_USER_BY_ID = BASE_URL + "/{id}";
     public static final String DELETE_USER_BY_EMAIL = BASE_URL + "/email/{email}";
 
 
-    public static final String UPDATE_PASSWORD = BASE_URL + "/{id}/update-password";
+    public static final String UPDATE_PASSWORD = BASE_URL + "/update-password";
     public static final String FORGOT_PASSWORD = BASE_URL + "/forgot-password/{email}";
     public static final String VERIFY_EMAIL_AND_CHANGE_PASSWORD = BASE_URL + "/verify-and-change-pwd";
 }

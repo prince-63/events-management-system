@@ -42,7 +42,7 @@ public class JwtTokenValidatorFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
             catch (Exception e) {
-                throw new JwtTokenValidationException(JWT_TOKEN_NOT_VALID.getMessage());
+                throw new JwtTokenValidationException(JWT_TOKEN_NOT_VALID);
             }
         }
 

@@ -35,7 +35,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         ConstraintValidationErrorResponseDTO errorResponse = new ConstraintValidationErrorResponseDTO(
                 request.getRequestURI().replace("uri=", ""),
                 HttpStatus.BAD_REQUEST.value(),
-                CONSTRAINT_VALIDATION.getMessage(),
+                CONSTRAINT_VALIDATION,
                 LocalDateTime.now(),
                 validationErrors
         );
