@@ -26,7 +26,15 @@ spring:
                     auth: true
                     starttls:
                         enable: true
-                        
+              
+com:
+    learn:
+        cloudinary:
+            name: ${CLOUDINARY_NAME:duhumawiq}
+            api:
+                key: ${CLOUDINARY_API_KEY:119948159122814}
+                secret: ${CLOUDINARY_API_SECRET:dVF_AkcNk985SqZQcDBYErDHDZI}
+                
 logging:
     level:
         org:
