@@ -60,7 +60,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             UnauthorizedRoleChangeException.class,
             ResourceNotFoundException.class,
             UserNotFoundException.class,
-            JwtTokenValidationException.class
+            JwtTokenValidationException.class,
+            QRCodeTokenNotFoundException.class
     })
     public ResponseEntity<ErrorResponseDTO> handleResourceNotFoundException(
             RuntimeException exception, WebRequest webRequest
@@ -78,8 +79,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         if (ex instanceof UserAlreadyExistsException) return HttpStatus.CONFLICT;
         if (ex instanceof InvalidPasswordException) return HttpStatus.UNAUTHORIZED;
         if (ex instanceof UnauthorizedRoleChangeException) return HttpStatus.FORBIDDEN;
-        if (ex instanceof ResourceNotFoundException) return HttpStatus.NOT_FOUND;
-        if (ex instanceof UserNotFoundException) return HttpStatus.NOT_FOUND;
+        if (ex instanceof ResourceNotFoundException ||
+                ex instanceof UserNotFoundException ||
+                ex instanceof QRCodeTokenNotFoundException) {
+            return HttpStatus.NOT_FOUND;
+        }
         return HttpStatus.BAD_REQUEST;
     }
 
