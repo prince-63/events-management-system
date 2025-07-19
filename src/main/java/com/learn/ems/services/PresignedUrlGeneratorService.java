@@ -4,6 +4,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
 
+/**
+ * Service interface for managing image upload to the cloudinary
+ */
 public interface PresignedUrlGeneratorService {
 
     /**
