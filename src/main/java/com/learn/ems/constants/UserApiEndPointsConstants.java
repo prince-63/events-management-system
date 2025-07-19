@@ -2,8 +2,6 @@ package com.learn.ems.constants;
 
 public final class UserApiEndPointsConstants {
 
-    private UserApiEndPointsConstants() {}
-
     private static final String BASE_URL = "/api/v1/users";
 
     public static final String FORM_LOGIN = BASE_URL + "/login/form";

@@ -1,6 +1,6 @@
 package com.learn.ems.constants;
 
-public class SwaggerEndPointsConstants {
+public final class SwaggerEndPointsConstants {
 
     public static final String[] SWAGGER_WHITELIST = {
             "/v3/api-docs",
