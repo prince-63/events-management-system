@@ -1,8 +1,8 @@
 package com.learn.ems.constants;
 
-public class EventApiEndPointConstants {
+public class EventApiEndPointsConstants {
 
-    private EventApiEndPointConstants() {}
+    private EventApiEndPointsConstants() {}
 
     private static final String BASE_URL = "/api/v1/events";
 

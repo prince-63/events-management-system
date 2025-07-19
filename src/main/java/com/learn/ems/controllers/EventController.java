@@ -15,7 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-import static com.learn.ems.constants.EventApiEndPointConstants.*;
+import static com.learn.ems.constants.EventApiEndPointsConstants.*;
 import static com.learn.ems.constants.ResponseMessageConstants.*;
 
 @RestController
