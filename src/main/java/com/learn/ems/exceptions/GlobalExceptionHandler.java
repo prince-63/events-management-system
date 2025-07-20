@@ -94,7 +94,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             return HttpStatus.NOT_FOUND;
         }
 
-        if (ex instanceof JwtTokenValidationException || ex instanceof UserAlreadyCheckedInException) {
+        if (ex instanceof JwtTokenValidationException || ex instanceof UserAlreadyCheckedInException || ex instanceof CommonException) {
             return HttpStatus.BAD_REQUEST;
         }
 
