@@ -54,15 +54,22 @@ public class EventController {
     @GetMapping(GET_ALL_EVENTS)
     public ResponseEntity<ResponseDTO<List<EventResponseDTO>>> getAllEvents() {
         List<Event> events = eventService.getAllEvents();
-        List<EventResponseDTO> response = events.stream().map(EventMapper::toDTO).toList();
-        return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO<>(EVENT_FETCHED_SUCCESSFULLY, true, response));
+        var response = buildResponseList(EVENT_FETCHED_SUCCESSFULLY, events);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @GetMapping(GET_EVENTS_BY_ORGANIZER)
     public ResponseEntity<ResponseDTO<List<EventResponseDTO>>> getEventsByOrganizer(@PathVariable Long organizerId) {
         List<Event> events = eventService.getEventsByOrganizer(organizerId);
-        List<EventResponseDTO> response = events.stream().map(EventMapper::toDTO).toList();
-        return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO<>(EVENT_FETCHED_SUCCESSFULLY, true, response));
+        var response = buildResponseList(EVENT_FETCHED_SUCCESSFULLY, events);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @GetMapping(GET_EVENTS_BY_TITLE)
+    public ResponseEntity<ResponseDTO<List<EventResponseDTO>>> getEventsByTitle(@RequestParam(name = "title") String title) {
+        List<Event> events = eventService.getEventByMatchingTitle(title);
+        var response = buildResponseList(EVENT_FETCHED_SUCCESSFULLY, events);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @PatchMapping(UPDATE_EVENT)
@@ -76,6 +83,10 @@ public class EventController {
     public ResponseEntity<ResponseDTO<?>> deleteEvent(@PathVariable Long eventId) {
         eventService.deleteEvent(eventId);
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO<>(EVENT_UPDATED_SUCCESSFULLY, true, null));
+    }
+
+    private ResponseDTO<List<EventResponseDTO>> buildResponseList(String message, List<Event> events) {
+        return new ResponseDTO<>(message, true, events.stream().map(EventMapper::toDTO).toList());
     }
 
     private ResponseDTO<EventResponseDTO> buildResponse(String message, Event event) {

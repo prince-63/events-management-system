@@ -9,6 +9,7 @@ public final class EventApiEndPointsConstants {
     public static final String GET_EVENT_BY_ID = BASE_URL + "/get/{eventId}";
     public static final String GET_ALL_EVENTS = BASE_URL;
     public static final String GET_EVENTS_BY_ORGANIZER = BASE_URL + "/organizer/{organizerId}";
+    public static final String GET_EVENTS_BY_TITLE = BASE_URL + "/title";
     public static final String UPDATE_EVENT = BASE_URL + "/update/{eventId}";
     public static final String DELETE_EVENT = BASE_URL + "/delete/{eventId}";
 }

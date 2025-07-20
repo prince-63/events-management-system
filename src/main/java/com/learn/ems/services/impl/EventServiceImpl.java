@@ -65,6 +65,11 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    public List<Event> getEventByMatchingTitle(String title) {
+        return eventRepository.findByTitleContainingIgnoreCase(title);
+    }
+
+    @Override
     public Event updateEvent(Long eventId, EventRequestDTO requestDTO) {
         Event dbEvent = eventRepository.findById(eventId).orElseThrow(() -> new NotFoundException(String.format("Event not found with %d id.", eventId)));
         dbEvent.setTitle(requestDTO.title() != null ? requestDTO.title() : dbEvent.getTitle());

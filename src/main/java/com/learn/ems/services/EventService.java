@@ -59,6 +59,13 @@ public interface EventService {
     List<Event> getEventsByOrganizer(Long organizerId);
 
     /**
+     * Retrieves all events based on the title
+     * @param title - title of the event
+     * @return - list of maching events
+     */
+    List<Event> getEventByMatchingTitle(String title);
+
+    /**
      * Updates the details of an existing event.
      *
      * @param eventId the unique ID of the event to be updated

@@ -57,6 +57,7 @@ public class SecurityConfig {
                                         GET_ALL_EVENTS,
                                         GET_EVENT_BY_ID,
                                         GET_EVENTS_BY_ORGANIZER,
+                                        GET_EVENTS_BY_TITLE,
                                         REGISTER_EVENT,
                                         CANCEL_REGISTER_EVENT,
                                         CHECK_IN_USER,
