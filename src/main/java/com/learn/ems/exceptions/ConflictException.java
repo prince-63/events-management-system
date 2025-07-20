@@ -3,9 +3,9 @@ package com.learn.ems.exceptions;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-@ResponseStatus(HttpStatus.NOT_FOUND)
-public class EventNotFoundException extends RuntimeException{
-    public EventNotFoundException(String message) {
+@ResponseStatus(HttpStatus.CONFLICT) // 409
+public class ConflictException extends RuntimeException {
+    public ConflictException(String message) {
         super(message);
     }
 }

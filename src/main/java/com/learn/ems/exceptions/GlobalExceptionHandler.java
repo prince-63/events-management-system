@@ -55,15 +55,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler({
-            UserAlreadyExistsException.class,
-            InvalidPasswordException.class,
-            UnauthorizedRoleChangeException.class,
-            ResourceNotFoundException.class,
-            UserNotFoundException.class,
-            JwtTokenValidationException.class,
-            QRCodeTokenNotFoundException.class,
-            UserAlreadyRegisteredEventException.class,
-            UserAlreadyCheckedInException.class
+            BadRequestException.class,
+            ForbiddenException.class,
+            ConflictException.class,
+            NotFoundException.class,
+            UnauthorizedAccessException.class,
     })
     public ResponseEntity<ErrorResponseDTO> handleResourceNotFoundException(
             RuntimeException exception, WebRequest webRequest
@@ -78,26 +74,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     private HttpStatus resolveStatus(RuntimeException ex) {
-        if (ex instanceof UserAlreadyExistsException || ex instanceof UserAlreadyRegisteredEventException) {
-            return HttpStatus.CONFLICT;
-        }
-
-        if (ex instanceof InvalidPasswordException) {
-            return HttpStatus.UNAUTHORIZED;
-        }
-
-        if (ex instanceof UnauthorizedRoleChangeException) {
-            return HttpStatus.FORBIDDEN;
-        }
-
-        if (ex instanceof ResourceNotFoundException || ex instanceof UserNotFoundException || ex instanceof QRCodeTokenNotFoundException) {
-            return HttpStatus.NOT_FOUND;
-        }
-
-        if (ex instanceof JwtTokenValidationException || ex instanceof UserAlreadyCheckedInException || ex instanceof CommonException) {
-            return HttpStatus.BAD_REQUEST;
-        }
-
+        if (ex instanceof BadRequestException) return HttpStatus.BAD_REQUEST;
+        if (ex instanceof ForbiddenException) return HttpStatus.FORBIDDEN;
+        if (ex instanceof NotFoundException) return HttpStatus.NOT_FOUND;
+        if (ex instanceof UnauthorizedAccessException) return HttpStatus.UNAUTHORIZED;
+        if (ex instanceof ConflictException) return HttpStatus.CONFLICT;
         return HttpStatus.INTERNAL_SERVER_ERROR;
     }
 
