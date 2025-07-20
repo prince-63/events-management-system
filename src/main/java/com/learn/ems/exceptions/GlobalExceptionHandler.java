@@ -61,7 +61,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             ResourceNotFoundException.class,
             UserNotFoundException.class,
             JwtTokenValidationException.class,
-            QRCodeTokenNotFoundException.class
+            QRCodeTokenNotFoundException.class,
+            UserAlreadyRegisteredEventException.class,
+            UserAlreadyCheckedInException.class
     })
     public ResponseEntity<ErrorResponseDTO> handleResourceNotFoundException(
             RuntimeException exception, WebRequest webRequest
@@ -76,15 +78,27 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     private HttpStatus resolveStatus(RuntimeException ex) {
-        if (ex instanceof UserAlreadyExistsException) return HttpStatus.CONFLICT;
-        if (ex instanceof InvalidPasswordException) return HttpStatus.UNAUTHORIZED;
-        if (ex instanceof UnauthorizedRoleChangeException) return HttpStatus.FORBIDDEN;
-        if (ex instanceof ResourceNotFoundException ||
-                ex instanceof UserNotFoundException ||
-                ex instanceof QRCodeTokenNotFoundException) {
+        if (ex instanceof UserAlreadyExistsException || ex instanceof UserAlreadyRegisteredEventException) {
+            return HttpStatus.CONFLICT;
+        }
+
+        if (ex instanceof InvalidPasswordException) {
+            return HttpStatus.UNAUTHORIZED;
+        }
+
+        if (ex instanceof UnauthorizedRoleChangeException) {
+            return HttpStatus.FORBIDDEN;
+        }
+
+        if (ex instanceof ResourceNotFoundException || ex instanceof UserNotFoundException || ex instanceof QRCodeTokenNotFoundException) {
             return HttpStatus.NOT_FOUND;
         }
-        return HttpStatus.BAD_REQUEST;
+
+        if (ex instanceof JwtTokenValidationException || ex instanceof UserAlreadyCheckedInException) {
+            return HttpStatus.BAD_REQUEST;
+        }
+
+        return HttpStatus.INTERNAL_SERVER_ERROR;
     }
 
 }
