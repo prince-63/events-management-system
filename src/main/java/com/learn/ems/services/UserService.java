@@ -74,6 +74,14 @@ public interface UserService {
     boolean existsByEmail(String email);
 
     /**
+     * Checks if a user exists with the given id.
+     *
+     * @param id unique id
+     * @return true if user exists, false otherwise
+     */
+    boolean existsById(Long id);
+
+    /**
      * Updates the user's name.
      *
      * @param email user email

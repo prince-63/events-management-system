@@ -1,7 +1,7 @@
 package com.learn.ems.services.impl;
 
 import com.learn.ems.entity.User;
-import com.learn.ems.exceptions.UserNotFoundException;
+import com.learn.ems.exceptions.NotFoundException;
 import com.learn.ems.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -22,8 +22,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private final UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UserNotFoundException {
-        User dbUser = userRepository.findByEmail(username).orElseThrow(() -> new UserNotFoundException(String.format(EMAIL_NOT_EXISTS, username)));
+    public UserDetails loadUserByUsername(String username) {
+        User dbUser = userRepository.findByEmail(username).orElseThrow(() -> new NotFoundException(String.format(EMAIL_NOT_EXISTS, username)));
         List<GrantedAuthority> authorities = dbUser.getRole().stream().map((role) -> new SimpleGrantedAuthority("ROLE_" + role.name())).collect(Collectors.toList());
         return new org.springframework.security.core.userdetails.User(dbUser.getEmail(), dbUser.getPassword(), true, true, true, true, authorities);
     }

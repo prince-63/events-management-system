@@ -1,6 +1,6 @@
 package com.learn.ems.config;
 
-import com.learn.ems.exceptions.InvalidPasswordException;
+import com.learn.ems.exceptions.ConflictException;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -26,7 +26,7 @@ public class UsernamePasswordAuthenticationProvider implements AuthenticationPro
         String password = authentication.getCredentials().toString();
         UserDetails user = userDetailsService.loadUserByUsername(username);
         if (!passwordEncoder.matches(password, user.getPassword())) {
-            throw new InvalidPasswordException(PASSWORD_MISMATCH);
+            throw new ConflictException(PASSWORD_MISMATCH);
         }
         return new UsernamePasswordAuthenticationToken(username, password, user.getAuthorities());
     }

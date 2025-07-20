@@ -1,6 +1,6 @@
 package com.learn.ems.filters;
 
-import com.learn.ems.exceptions.JwtTokenValidationException;
+import com.learn.ems.exceptions.ForbiddenException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -27,7 +27,7 @@ import static com.learn.ems.constants.UserApiEndPointsConstants.*;
 public class JwtTokenValidatorFilter extends OncePerRequestFilter {
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException, JwtTokenValidationException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String jwt = request.getHeader(JWT_HEADER);
 
         if (jwt != null) {
@@ -42,7 +42,7 @@ public class JwtTokenValidatorFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
             catch (Exception e) {
-                throw new JwtTokenValidationException(JWT_TOKEN_NOT_VALID);
+                throw new ForbiddenException(JWT_TOKEN_NOT_VALID);
             }
         }
 

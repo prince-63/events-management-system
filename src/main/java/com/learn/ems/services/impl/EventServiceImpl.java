@@ -3,7 +3,7 @@ package com.learn.ems.services.impl;
 import com.learn.ems.dto.EventRequestDTO;
 import com.learn.ems.entity.Event;
 import com.learn.ems.entity.User;
-import com.learn.ems.exceptions.EventNotFoundException;
+import com.learn.ems.exceptions.NotFoundException;
 import com.learn.ems.mapper.EventMapper;
 import com.learn.ems.repositories.EventRepository;
 import com.learn.ems.services.EventService;
@@ -33,19 +33,24 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public Event uploadBannerImage(Long eventId, MultipartFile image) throws EventNotFoundException {
+    public Event uploadBannerImage(Long eventId, MultipartFile image) {
         Map<String, String> obj = urlGeneratorService.generate(image);
         String publicId = obj.get("public_id");
         String url = obj.get("url");
-        Event dbEvent = eventRepository.findById(eventId).orElseThrow(() -> new EventNotFoundException(String.format("Event not found with %d id.", eventId)));
+        Event dbEvent = eventRepository.findById(eventId).orElseThrow(() -> new NotFoundException(String.format("Event not found with %d id.", eventId)));
         dbEvent.setUrlId(publicId);
         dbEvent.setBannerUrl(url);
         return eventRepository.save(dbEvent);
     }
 
     @Override
-    public Event getEventById(Long eventId) throws EventNotFoundException {
-        return eventRepository.findById(eventId).orElseThrow(() -> new EventNotFoundException(String.format("Event not found with %d id.", eventId)));
+    public Event getEventById(Long eventId) {
+        return eventRepository.findById(eventId).orElseThrow(() -> new NotFoundException(String.format("Event not found with %d id.", eventId)));
+    }
+
+    @Override
+    public boolean existsById(Long eventId) {
+        return eventRepository.existsById(eventId);
     }
 
     @Override
@@ -61,7 +66,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public Event updateEvent(Long eventId, EventRequestDTO requestDTO) {
-        Event dbEvent = eventRepository.findById(eventId).orElseThrow(() -> new EventNotFoundException(String.format("Event not found with %d id.", eventId)));
+        Event dbEvent = eventRepository.findById(eventId).orElseThrow(() -> new NotFoundException(String.format("Event not found with %d id.", eventId)));
         dbEvent.setTitle(requestDTO.title() != null ? requestDTO.title() : dbEvent.getTitle());
         dbEvent.setDescription(requestDTO.description() != null ? requestDTO.description() : dbEvent.getDescription());
         dbEvent.setStartTime(requestDTO.startTime() != null ? requestDTO.startTime() : dbEvent.getStartTime());

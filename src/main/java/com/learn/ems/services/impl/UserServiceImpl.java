@@ -3,10 +3,10 @@ package com.learn.ems.services.impl;
 import com.learn.ems.dto.*;
 import com.learn.ems.entity.Role;
 import com.learn.ems.entity.User;
-import com.learn.ems.exceptions.InvalidPasswordException;
-import com.learn.ems.exceptions.UnauthorizedRoleChangeException;
-import com.learn.ems.exceptions.UserAlreadyExistsException;
-import com.learn.ems.exceptions.UserNotFoundException;
+import com.learn.ems.exceptions.BadRequestException;
+import com.learn.ems.exceptions.ConflictException;
+import com.learn.ems.exceptions.ForbiddenException;
+import com.learn.ems.exceptions.NotFoundException;
 import com.learn.ems.mapper.UserMapper;
 import com.learn.ems.repositories.UserRepository;
 import com.learn.ems.services.EmailService;
@@ -49,16 +49,16 @@ public class UserServiceImpl implements UserService {
             User existingUser = existingUserOpt.get();
 
             if (existingUser.getRole().contains(Role.ADMIN)) {
-                throw new UnauthorizedRoleChangeException(ADMIN_ROLE_CONFLICT);
+                throw new ForbiddenException(ADMIN_ROLE_CONFLICT);
             }
 
             if (existingUser.getRole().contains(Role.ATTENDEE)) {
-                throw new UserAlreadyExistsException(ATTENDEE_ALREADY_EXISTS);
+                throw new ConflictException(ATTENDEE_ALREADY_EXISTS);
             }
 
             if (existingUser.getRole().contains(Role.ORGANIZER)) {
                 if (!passwordEncoder.matches(requestDTO.password(), existingUser.getPassword())) {
-                    throw new InvalidPasswordException(ORGANIZER_PASSWORD_MISMATCH);
+                    throw new BadRequestException(ORGANIZER_PASSWORD_MISMATCH);
                 }
 
                 existingUser.getRole().add(Role.ATTENDEE);
@@ -78,7 +78,7 @@ public class UserServiceImpl implements UserService {
         Optional<User> existingUserOpt = userRepository.findByEmail(requestDTO.email());
 
         if (existingUserOpt.isPresent()) {
-            throw new UserAlreadyExistsException(ADMIN_ALREADY_EXISTS);
+            throw new ConflictException(ADMIN_ALREADY_EXISTS);
         }
 
         User newAdmin = UserMapper.toModel(requestDTO);
@@ -96,16 +96,16 @@ public class UserServiceImpl implements UserService {
             User existingUser = existingUserOpt.get();
 
             if (existingUser.getRole().contains(Role.ADMIN)) {
-                throw new UnauthorizedRoleChangeException(ADMIN_ROLE_CONFLICT);
+                throw new ForbiddenException(ADMIN_ROLE_CONFLICT);
             }
 
             if (existingUser.getRole().contains(Role.ORGANIZER)) {
-                throw new UserAlreadyExistsException(ORGANIZER_ALREADY_EXISTS);
+                throw new ConflictException(ORGANIZER_ALREADY_EXISTS);
             }
 
             if (existingUser.getRole().contains(Role.ATTENDEE)) {
                 if (!passwordEncoder.matches(requestDTO.password(), existingUser.getPassword())) {
-                    throw new InvalidPasswordException(ATTENDEE_PASSWORD_MISMATCH);
+                    throw new BadRequestException(ATTENDEE_PASSWORD_MISMATCH);
                 }
 
                 existingUser.getRole().add(Role.ORGANIZER);
@@ -152,8 +152,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getById(Long id) throws UserNotFoundException {
-        return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(String.format(USER_WITH_ID_NOT_EXISTS, id)));
+    public User getById(Long id) {
+        return userRepository.findById(id).orElseThrow(() -> new NotFoundException(String.format(USER_WITH_ID_NOT_EXISTS, id)));
     }
 
     @Override
@@ -162,7 +162,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateName(String email, String name) throws UserNotFoundException {
+    public boolean existsById(Long id) {
+        return userRepository.existsById(id);
+    }
+
+    @Override
+    public User updateName(String email, String name) {
         User user = getUser(email);
         user.setName(name);
         return userRepository.save(user);
@@ -175,7 +180,7 @@ public class UserServiceImpl implements UserService {
             user.setPassword(passwordEncoder.encode(requestDTO.newPassword()));
             return userRepository.save(user);
         } else {
-            throw new InvalidPasswordException(CHANGE_PASSWORD_MISMATCH);
+            throw new BadRequestException(CHANGE_PASSWORD_MISMATCH);
         }
     }
 
@@ -231,11 +236,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteById(Long id) {
-        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(String.format(USER_WITH_ID_NOT_EXISTS, id)));
+        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException(String.format(USER_WITH_ID_NOT_EXISTS, id)));
         userRepository.delete(user);
     }
 
-    private User getUser(String email) throws UserNotFoundException {
-        return userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException(String.format(EMAIL_NOT_EXISTS, email)));
+    private User getUser(String email) {
+        return userRepository.findByEmail(email).orElseThrow(() -> new NotFoundException(String.format(EMAIL_NOT_EXISTS, email)));
     }
 }

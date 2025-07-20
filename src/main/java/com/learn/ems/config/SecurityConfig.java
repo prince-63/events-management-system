@@ -18,6 +18,7 @@ import org.springframework.security.web.authentication.password.HaveIBeenPwnedRe
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import static com.learn.ems.constants.EventApiEndPointsConstants.*;
+import static com.learn.ems.constants.RegistrationApiEndPointsConstants.*;
 import static com.learn.ems.constants.SwaggerEndPointsConstants.SWAGGER_WHITELIST;
 import static com.learn.ems.constants.UserApiEndPointsConstants.*;
 
@@ -55,7 +56,13 @@ public class SecurityConfig {
                                         VERIFY_EMAIL_AND_CHANGE_PASSWORD,
                                         GET_ALL_EVENTS,
                                         GET_EVENT_BY_ID,
-                                        GET_EVENTS_BY_ORGANIZER
+                                        GET_EVENTS_BY_ORGANIZER,
+                                        REGISTER_EVENT,
+                                        CANCEL_REGISTER_EVENT,
+                                        CHECK_IN_USER,
+                                        GET_REGISTERED_EVENTS,
+                                        GET_REGISTERED_EVENT_BY_USER,
+                                        GET_REGISTERED_EVENT_DETAILS
                                 ).authenticated()
                                 .requestMatchers(SWAGGER_WHITELIST).permitAll()
                                 .anyRequest().denyAll());
