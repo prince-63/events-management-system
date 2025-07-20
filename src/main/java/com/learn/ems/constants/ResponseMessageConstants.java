@@ -13,7 +13,6 @@ public final class ResponseMessageConstants {
     public static final String USER_NAME_UPDATED_SUCCESSFULLY = "User name updated successfully.";
     public static final String PASSWORD_UPDATED_SUCCESSFULLY = "Password updated successfully.";
     public static final String PASSWORD_RESET_EMAIL_SENT = "Password reset email sent successfully.";
-    public static final String PASSWORD_RESET_SUCCESSFUL = "Password reset successful.";
     public static final String USER_DELETED_SUCCESSFULLY = "User deleted successfully.";
 
     public static final String EVENT_CREATED_SUCCESSFULLY = "Event created successfully.";

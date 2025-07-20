@@ -3,7 +3,7 @@ package com.learn.ems.services.impl;
 import com.learn.ems.entity.Event;
 import com.learn.ems.entity.QRCodeToken;
 import com.learn.ems.entity.User;
-import com.learn.ems.exceptions.QRCodeTokenNotFoundException;
+import com.learn.ems.exceptions.NotFoundException;
 import com.learn.ems.repositories.QRCodeTokenRepository;
 import com.learn.ems.services.QRCodeTokenService;
 import lombok.AllArgsConstructor;
@@ -39,8 +39,8 @@ public class QRCodeTokenServiceImpl implements QRCodeTokenService {
     }
 
     @Override
-    public QRCodeToken getToken(String token) throws QRCodeTokenNotFoundException {
-        return qrCodeTokenRepository.findByToken(token).orElseThrow(() -> new QRCodeTokenNotFoundException(token));
+    public QRCodeToken getToken(String token) {
+        return qrCodeTokenRepository.findByToken(token).orElseThrow(() -> new NotFoundException("Qr token not found"));
     }
 
     @Override

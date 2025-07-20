@@ -36,6 +36,14 @@ public interface EventService {
     Event getEventById(Long eventId);
 
     /**
+     * Check event exists with eventId
+     *
+     * @param eventId the unique identifier of the event
+     * @return the Event object if found
+     */
+    boolean existsById(Long eventId);
+
+    /**
      * Retrieves all events available in the system.
      *
      * @return list of all Event objects
