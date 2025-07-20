@@ -1,13 +1,17 @@
 package com.learn.ems.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.Map;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
+@AllArgsConstructor
+@NoArgsConstructor
 public class ConstraintValidationErrorResponseDTO extends ErrorResponseDTO {
     private Map<String, String> validationErrors;
 
