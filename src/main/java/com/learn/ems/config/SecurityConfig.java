@@ -10,12 +10,17 @@ import org.springframework.security.authentication.password.CompromisedPasswordC
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.password.HaveIBeenPwnedRestApiPasswordChecker;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+
+import java.util.Collections;
+import java.util.List;
 
 import static com.learn.ems.constants.EventApiEndPointsConstants.*;
 import static com.learn.ems.constants.RegistrationApiEndPointsConstants.*;
@@ -27,9 +32,22 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable)
+        http
+                .sessionManagement(sessionConfig -> sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .cors(corsConfig -> corsConfig.configurationSource(request -> {
+                    CorsConfiguration config = new CorsConfiguration();
+                    config.setAllowedOrigins(Collections.singletonList("*"));
+                    config.setAllowedMethods(Collections.singletonList("*"));
+                    config.setAllowCredentials(true);
+                    config.setAllowedHeaders(Collections.singletonList("*"));
+                    config.setExposedHeaders(List.of("Authorization"));
+                    config.setMaxAge(3600L);
+                    return config;
+                }))
+                .csrf(AbstractHttpConfigurer::disable)
                 .addFilterBefore(new JwtTokenValidatorFilter(), BasicAuthenticationFilter.class)
                 .addFilterAfter(new JwtTokenGeneratorFilter(), BasicAuthenticationFilter.class)
+                .requiresChannel(rcc -> rcc.anyRequest().requiresInsecure()) // HTTP
                 .authorizeHttpRequests(
                         (req) -> req
                                 .requestMatchers(
