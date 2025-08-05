@@ -1,0 +1,1159 @@
+{
+	"info": {
+		"_postman_id": "e0dabcc8-3ffc-4932-ac14-f464b463ada3",
+		"name": "ems",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "42434904"
+	},
+	"item": [
+		{
+			"name": "user",
+			"item": [
+				{
+					"name": "register-attendee",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Attendee\",\r\n    \"email\": \"attendeetest@gmail.com\",\r\n    \"password\": \"attendee@1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "/api/v1/users/attendee/register",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"attendee",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "register-organizer",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Prince Kumar Prasad\",\r\n    \"email\": \"organizertest@gmail.com\",\r\n    \"password\": \"organizer@1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "/api/v1/users/organizer/register",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"organizer",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "register-admin",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Attendee\",\r\n    \"email\": \"admintest@gmail.com\",\r\n    \"password\": \"admin@1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "/api/v1/users/admin/register",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"admin",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "form-login",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "attendee@1234",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "attendeetest@gmail.com",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Attendee\",\r\n    \"email\": \"organizer@gmail.com\",\r\n    \"password\": \"organizer@1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "/api/v1/users/login/form",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"login",
+								"form"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"admintest@gmail.com\",\r\n    \"password\": \"admin@1234\"\r\n}\r\n\r\n// {\r\n//     \"email\": \"organizertest@gmail.com\",\r\n//     \"password\": \"organizer@1234\"\r\n// }\r\n\r\n// {\r\n//     \"email\": \"attendeetest@gmail.com\",\r\n//     \"password\": \"attendee@1234\"\r\n// }\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "/api/v1/users/login",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "logout",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{JWT_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "/api/v1/users/logout",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-all-users",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{JWT_ADMIN}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "/api/v1/users/all",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"all"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-current-user",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{JWT_ATTENDEE}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "/api/v1/users/current-user",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"current-user"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "check-user-exists-by-email",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{JWT_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "/api/v1/users/exists-by-email/attendeetest@gmail.com",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"exists-by-email",
+								"attendeetest@gmail.com"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update-name",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{JWT_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Prince Kumar Prasad\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "/api/v1/users/update-name",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"update-name"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update-password",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{JWT_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"currentPassword\": \"organizer@1234\",\r\n    \"newPassword\": \"1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "/api/v1/users/update-password",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"update-password"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "forgot-password",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{JWT_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"currentPassword\": \"attendee@1234\",\r\n    \"newPassword\": \"1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "/api/v1/users/forgot-password/organizertest@gmail.com",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"forgot-password",
+								"organizertest@gmail.com"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "verify-and-change-password",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{JWT_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"organizertest@gmail.com\",\r\n    \"newPassword\": \"4321\",\r\n    \"verificationCode\": \"868480\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "/api/v1/users/verify-and-change-pwd",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"verify-and-change-pwd"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete-user-by-email",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{JWT_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"attendeetest@gmail.com\",\r\n    \"newPassword\": \"4321\",\r\n    \"verificationCode\": \"182443\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "/api/v1/users/email/organizertest@gmail.com",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"email",
+								"organizertest@gmail.com"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete-user-by-id",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{JWT_ORGANIZER}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"attendeetest@gmail.com\",\r\n    \"newPassword\": \"4321\",\r\n    \"verificationCode\": \"182443\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "/api/v1/users/1",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"1"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "event",
+			"item": [
+				{
+					"name": "create-event",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{JWT_ORGANIZER}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Tech Conference 2025\",\r\n    \"description\": \"A conference bringing together tech enthusiasts, professionals, and innovators.\",\r\n    \"startTime\": \"2025-08-10T09:00:00\",\r\n    \"endTime\": \"2025-08-10T17:00:00\",\r\n    \"location\": \"Bangalore International Convention Centre\",\r\n    \"capacity\": 500\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "/api/v1/events/create",
+							"path": [
+								"api",
+								"v1",
+								"events",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "upload-banner",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{JWT_ORGANIZER}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "imageFile",
+									"type": "file",
+									"src": "postman-cloud:///1ef79861-8745-4370-abeb-f032ca662357"
+								}
+							]
+						},
+						"url": {
+							"raw": "/api/v1/events/3/upload-banner",
+							"path": [
+								"api",
+								"v1",
+								"events",
+								"3",
+								"upload-banner"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-event-by-id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{JWT_ORGANIZER}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "imageFile",
+									"type": "file",
+									"src": "postman-cloud:///1ef79861-8745-4370-abeb-f032ca662357"
+								}
+							]
+						},
+						"url": {
+							"raw": "/api/v1/events/get/3",
+							"path": [
+								"api",
+								"v1",
+								"events",
+								"get",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-all-events",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{JWT_ADMIN}}",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Authorization",
+								"value": "{{JWT_ORGANIZER}}",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Authorization",
+								"value": "{{JWT_ATTENDEE}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "imageFile",
+									"type": "file",
+									"src": "postman-cloud:///1ef79861-8745-4370-abeb-f032ca662357"
+								}
+							]
+						},
+						"url": {
+							"raw": "/api/v1/events",
+							"path": [
+								"api",
+								"v1",
+								"events"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "events-by-organizer",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{JWT_ADMIN}}",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Authorization",
+								"value": "{{JWT_ORGANIZER}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "imageFile",
+									"type": "file",
+									"src": "postman-cloud:///1ef79861-8745-4370-abeb-f032ca662357"
+								}
+							]
+						},
+						"url": {
+							"raw": "/api/v1/events/organizer/4",
+							"path": [
+								"api",
+								"v1",
+								"events",
+								"organizer",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "events-by-title",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{JWT_ADMIN}}",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{JWT_ORGANIZER}}",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "imageFile",
+									"type": "file",
+									"src": "postman-cloud:///1ef79861-8745-4370-abeb-f032ca662357"
+								}
+							]
+						},
+						"url": {
+							"raw": "/api/v1/events/title?title=Tech Conference 2025",
+							"path": [
+								"api",
+								"v1",
+								"events",
+								"title"
+							],
+							"query": [
+								{
+									"key": "title",
+									"value": "Tech Conference 2025"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update-event",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{JWT_ADMIN}}",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Authorization",
+								"value": "{{JWT_ORGANIZER}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Tech Conference 2025\",\r\n    \"description\": \"A conference bringing together tech enthusiasts, professionals, and innovators.\",\r\n    \"startTime\": \"2025-08-10T09:00:00\",\r\n    \"endTime\": \"2025-08-10T17:00:00\",\r\n    \"location\": \"Bangalore International Convention Centre\",\r\n    \"capacity\": 1000\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "/api/v1/events/update/1",
+							"path": [
+								"api",
+								"v1",
+								"events",
+								"update",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete-event",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{JWT_ADMIN}}",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Authorization",
+								"value": "{{JWT_ORGANIZER}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Tech Conference 2025\",\r\n    \"description\": \"A conference bringing together tech enthusiasts, professionals, and innovators.\",\r\n    \"startTime\": \"2025-08-10T09:00:00\",\r\n    \"endTime\": \"2025-08-10T17:00:00\",\r\n    \"location\": \"Bangalore International Convention Centre\",\r\n    \"capacity\": 1000\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "/api/v1/events/delete/2",
+							"path": [
+								"api",
+								"v1",
+								"events",
+								"delete",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "registration",
+			"item": [
+				{
+					"name": "register-event",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{JWT_ATTENDEE}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Tech Conference 2025\",\r\n    \"description\": \"A conference bringing together tech enthusiasts, professionals, and innovators.\",\r\n    \"startTime\": \"2025-08-10T09:00:00\",\r\n    \"endTime\": \"2025-08-10T17:00:00\",\r\n    \"location\": \"Bangalore International Convention Centre\",\r\n    \"capacity\": 500\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "/api/v1/events/registration/register/1/3",
+							"path": [
+								"api",
+								"v1",
+								"events",
+								"registration",
+								"register",
+								"1",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "cancel-registration",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{JWT_ATTENDEE}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Tech Conference 2025\",\r\n    \"description\": \"A conference bringing together tech enthusiasts, professionals, and innovators.\",\r\n    \"startTime\": \"2025-08-10T09:00:00\",\r\n    \"endTime\": \"2025-08-10T17:00:00\",\r\n    \"location\": \"Bangalore International Convention Centre\",\r\n    \"capacity\": 500\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "/api/v1/events/registration/cancel/1/3",
+							"path": [
+								"api",
+								"v1",
+								"events",
+								"registration",
+								"cancel",
+								"1",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "check-in-event",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{JWT_ATTENDEE}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Tech Conference 2025\",\r\n    \"description\": \"A conference bringing together tech enthusiasts, professionals, and innovators.\",\r\n    \"startTime\": \"2025-08-10T09:00:00\",\r\n    \"endTime\": \"2025-08-10T17:00:00\",\r\n    \"location\": \"Bangalore International Convention Centre\",\r\n    \"capacity\": 500\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "/api/v1/events/registration/checkIn/1/1",
+							"path": [
+								"api",
+								"v1",
+								"events",
+								"registration",
+								"checkIn",
+								"1",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "registered-event-by-user",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{JWT_ATTENDEE}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Tech Conference 2025\",\r\n    \"description\": \"A conference bringing together tech enthusiasts, professionals, and innovators.\",\r\n    \"startTime\": \"2025-08-10T09:00:00\",\r\n    \"endTime\": \"2025-08-10T17:00:00\",\r\n    \"location\": \"Bangalore International Convention Centre\",\r\n    \"capacity\": 500\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "/api/v1/events/registration/get/user/1",
+							"path": [
+								"api",
+								"v1",
+								"events",
+								"registration",
+								"get",
+								"user",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "all-registration-by-event-id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{JWT_ATTENDEE}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Tech Conference 2025\",\r\n    \"description\": \"A conference bringing together tech enthusiasts, professionals, and innovators.\",\r\n    \"startTime\": \"2025-08-10T09:00:00\",\r\n    \"endTime\": \"2025-08-10T17:00:00\",\r\n    \"location\": \"Bangalore International Convention Centre\",\r\n    \"capacity\": 500\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "/api/v1/events/registration/get/event/3",
+							"path": [
+								"api",
+								"v1",
+								"events",
+								"registration",
+								"get",
+								"event",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "all-registration-by-event-id Copy",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{JWT_ATTENDEE}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Tech Conference 2025\",\r\n    \"description\": \"A conference bringing together tech enthusiasts, professionals, and innovators.\",\r\n    \"startTime\": \"2025-08-10T09:00:00\",\r\n    \"endTime\": \"2025-08-10T17:00:00\",\r\n    \"location\": \"Bangalore International Convention Centre\",\r\n    \"capacity\": 500\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "/api/v1/events/registration/get/details/1/1",
+							"path": [
+								"api",
+								"v1",
+								"events",
+								"registration",
+								"get",
+								"details",
+								"1",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "welcome",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJib29rc3RvcmUiLCJzdWIiOiJKV1QgVG9rZW4iLCJ1c2VybmFtZSI6Im9yZ2FuaXplckBnbWFpbC5jb20iLCJhdXRob3JpdGllcyI6Ik9SR0FOSVpFUiIsImlhdCI6MTc1MjcyNzk3MSwiZXhwIjoxNzUyNzU3OTcxfQ.UGCbH3UIZhjYnU1lvRaaTLmwI5eVs6e5gbdI-sjxDUI",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "/api/v1/say-welcome",
+					"path": [
+						"api",
+						"v1",
+						"say-welcome"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					"pm.request.url.protocol=\"http\";\r",
+					"pm.request.url.host=\"localhost\";\r",
+					"pm.request.url.port=\"8080\";"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "JWT_ORGANIZER",
+			"value": "eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJib29rc3RvcmUiLCJzdWIiOiJKV1QgVG9rZW4iLCJ1c2VybmFtZSI6Im9yZ2FuaXplckBnbWFpbC5jb20iLCJhdXRob3JpdGllcyI6Ik9SR0FOSVpFUiIsImlhdCI6MTc1MjcyNzk3MSwiZXhwIjoxNzUyNzU3OTcxfQ.UGCbH3UIZhjYnU1lvRaaTLmwI5eVs6e5gbdI-sjxDUI",
+			"type": "default"
+		},
+		{
+			"key": "JWT_ADMIN",
+			"value": "eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJib29rc3RvcmUiLCJzdWIiOiJKV1QgVG9rZW4iLCJ1c2VybmFtZSI6ImFkbWludGVzdEBnbWFpbC5jb20iLCJhdXRob3JpdGllcyI6IlJPTEVfQURNSU4iLCJpYXQiOjE3NTI4MTgwNDIsImV4cCI6MTc1Mjg0ODA0Mn0.XbZIfqXr5Mbis4_GPPYqq56SXRltGNxcDHWIb56bxUQ",
+			"type": "default"
+		},
+		{
+			"key": "JWT_ATTENDEE",
+			"value": "eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJib29rc3RvcmUiLCJzdWIiOiJKV1QgVG9rZW4iLCJ1c2VybmFtZSI6ImF0dGVuZGVldGVzdEBnbWFpbC5jb20iLCJhdXRob3JpdGllcyI6IlJPTEVfQVRURU5ERUUiLCJpYXQiOjE3NTI5MDI3ODAsImV4cCI6MTc1MjkzMjc4MH0.dibi2XcevDoJ8Zz8hx5ss8BOpks6H6rHMj6MY_bN0Cc",
+			"type": "default"
+		}
+	]
+}
